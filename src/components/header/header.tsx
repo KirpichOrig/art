@@ -30,8 +30,9 @@ const Header: React.FC = () => {
         </Link>
       </div>
       <nav className="header-nav">
-        <a href="#">день</a>
-        <a href="/start#miniWorks">работы учеников</a>
+        <a href="#">инфо</a>
+        {/* <a href="/start#miniWorks">работы учеников</a> */}
+        <Link href="/catalog">каталог</Link>
         <a href="/start#cours">услуги</a>
         <div className="header-nav-authorization">
           <Link href="/registration">

@@ -6,6 +6,11 @@ import './style.css';
 const Auth = () => {
   return (
     <div className='h-[100vh] flex justify-center items-center'>
+      {/* <div className="scrolling-text-container">
+        <div className="scrolling-text">
+          Это ваш текст для прокрутки, который будет двигаться по экрану.
+        </div>
+      </div> */}
       {/* img */}
       <div className='relative max-h-[600px] max-w-[427px] rounded-l-[20px]'>
         <Image className='h-full w-full rounded-l-[20px]'
@@ -21,7 +26,7 @@ const Auth = () => {
       </div>
       {/* блок с формой */}
       <div className='max-h-[600px] max-w-[427px] h-full w-full'>
-        <Link href="/registration">
+        <Link href="/auth">
         <p className='text-white text-[14px] pl-4 py-1 bg-transparent flex items-center gap-1'>
           <span className='opacity-[0.6]'>у меня уже есть аккаунт</span>
           <Image className='h-[15px] w-[15px] bg-transparent'

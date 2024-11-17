@@ -1,3 +1,23 @@
 .input {
     border-bottom: 1px solid white;
 }
+
+.scrolling-text-container {
+    overflow: hidden; /* Скрывает текст, когда он выходит за границы */
+    white-space: nowrap; /* Не позволяет тексту переноситься */
+  }
+  
+  .scrolling-text {
+    display: inline-block;
+    animation: scroll 10s linear infinite; /* Анимация прокрутки */
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateX(100%); /* Начинаем за пределами справа */
+    }
+    100% {
+      transform: translateX(-100%); /* Заканчиваем за пределами слева */
+    }
+  }
+  

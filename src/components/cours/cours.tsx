@@ -19,7 +19,7 @@ const Cours = () => {
   }
 
   return (
-    <div id='cours' className='max-w-[1400px] mt-300px mr-[auto] mb-0 ml-[auto]'>
+    <div id='cours' className='max-w-[1440px] mt-300px mr-[auto] mb-0 ml-[auto] px-[20px]'>
       <div  className='flex mt-[300px] justify-between items-center relative'>
         {/* 2d */}
         <div className='relative max-h-[694.34px] max-w-[460px] w-full h-full'>

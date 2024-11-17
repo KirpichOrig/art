@@ -26,7 +26,7 @@ const miniWorks = () => {
             <Image className='rounded-[20px]'
                 src="/images/miniWorks/7.gif"
                 width={300}
-                height={349}
+                height={320}
                 alt={''}
             />
           </div>
@@ -38,7 +38,7 @@ const miniWorks = () => {
                 alt={''}
             />
             <Image className='rounded-[20px]'
-                src="/images/miniWorks/6.png"
+                src="/images/miniWorks/10.png"
                 width={300}
                 height={287}
                 alt={''}
@@ -80,7 +80,7 @@ const miniWorks = () => {
                 alt={''}
             />
             <Image className='rounded-[20px]'
-                src="/images/miniWorks/10.png"
+                src="/images/miniWorks/6.png"
                 width={300}
                 height={302}
                 alt={''}

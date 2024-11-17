@@ -21,7 +21,7 @@ const Auth = () => {
       </div>
       {/* блок с формой */}
       <div className='max-h-[600px] max-w-[427px] h-full w-full'>
-        <Link href="/auth">
+        <Link href="/registration">
         <p className='text-white text-[14px] pl-4 py-1 bg-transparent flex items-center gap-1'>
           <span className='opacity-[0.6]'>у меня нет аккаунта</span>
           <Image className='h-[15px] w-[15px] bg-transparent'
