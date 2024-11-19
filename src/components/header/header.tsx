@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -8,6 +8,15 @@ import './header.css';
 
 const Header: React.FC = () => {
   const pathname = usePathname();
+  const [user, setUser] = useState<any>(null);
+
+  // Проверка авторизации при загрузке компонента
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Устанавливаем информацию о пользователе
+    }
+  }, []);
 
   // Обработчик клика на логотип
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -31,17 +40,26 @@ const Header: React.FC = () => {
       </div>
       <nav className="header-nav">
         <a href="#">инфо</a>
-        {/* <a href="/start#miniWorks">работы учеников</a> */}
         <Link href="/catalog">каталог</Link>
         <a href="/start#cours">услуги</a>
+        <a href="/start#miniWorks">работы учеников  </a>
         <div className="header-nav-authorization">
-          <Link href="/registration">
-            <p>регистрация</p>
-          </Link>
-          <p>/</p>
-          <Link href="/auth">
-            <p>вход</p>
-          </Link>
+          {user ? (
+            // Если пользователь авторизован, показываем ссылку на профиль
+            <Link href="/profile">
+              <p>профиль</p>
+            </Link>
+          ) : (
+            <>
+              <Link href="/registration">
+                <p>регистрация</p>
+              </Link>
+              <p>/</p>
+              <Link href="/auth">
+                <p>вход</p>
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>

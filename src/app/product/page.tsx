@@ -17,7 +17,7 @@ const images = [
   { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
 ];
 
-const Catalog = () => {
+const Product = () => {
   const breakpointColumnsObj = {
     default: 10,      // 5 колонок по умолчанию для экранов большего размера, например, для 1600px
     2730: 9, 
@@ -71,6 +71,9 @@ const Catalog = () => {
       </div>
       {/* content */}
       <div className="absolute left-[92px] top-[80px] px-4 py-4">
+        <div className='ml-[-15px]'>
+        
+        </div>
         <Masonry
           breakpointCols={breakpointColumnsObj}
           className="my-masonry-grid"
@@ -95,5 +98,5 @@ const Catalog = () => {
   );
 };
 
-export default Catalog;
+export default Product;
 
