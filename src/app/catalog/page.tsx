@@ -17,18 +17,18 @@ const images = [
   { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
 ];
 
-const Catalog = () => {
+const Product = () => {
   const breakpointColumnsObj = {
-    default: 10,      // 5 колонок по умолчанию для экранов большего размера, например, для 1600px
+    default: 10,  
     2730: 9, 
     2420: 8, 
     2180: 7, 
     1860: 6, 
     1600: 5, 
-    1100: 4,         // 4 колонки для экранов ≤ 1100px
-    900: 3,          // 3 колонки для экранов ≤ 900px
-    768: 2,          // 2 колонки для экранов ≤ 768px
-    500: 1,          // 1 колонка для экранов ≤ 500px
+    1100: 4,      
+    900: 3,       
+    768: 2, 
+    500: 1,
   };
   
 
@@ -36,8 +36,8 @@ const Catalog = () => {
     <div className="relative">
       {/* header */}
       <div className="absolute left-[72px]">
-        <div className="fixed z-20 bg-black w-full h-[80px] flex items-center gap-5 pl-[20px] pr-[92px]">
-          <div className="bg-[#1d1d1d] w-full rounded-[12px] flex items-center px-5">
+        <div className="fixed z-20 bg-black w-full h-[80px] flex items-center gap-[10px] pl-[10px] pr-[82px] sm:gap-[20px] sm:pl-[20px] sm:pr-[92px]">
+          <div className="bg-[#1d1d1d] w-full rounded-[12px] flex items-center px-5 gap-1">
             <input
               type="text"
               placeholder="Поиск"
@@ -61,7 +61,7 @@ const Catalog = () => {
           <Link href="/start">
             <i className="fa-solid fa-house text-[#474747] text-[22px]"></i>
           </Link>
-          <Link href="/catalog">
+          <Link href="/upload">
             <i className="fa-regular fa-square-plus text-[#474747] text-[26px]"></i>
           </Link>
           <Link href="/catalog">
@@ -77,14 +77,14 @@ const Catalog = () => {
           columnClassName="my-masonry-grid_column"
         >
           {images.map((image, index) => (
-            <div key={index} className="rounded overflow-hidden shadow-lg">
+            <div key={index} className="rounded-[10px] overflow-hidden shadow-lg">
               <Link href="/product">
                 <Image
                   src={image.src}
                   alt={image.alt}
                   width={image.width}
                   height={image.height}
-                  className="rounded"
+                  className="rounded-[10px]"
                 />
               </Link>
             </div>
@@ -95,5 +95,5 @@ const Catalog = () => {
   );
 };
 
-export default Catalog;
+export default Product;
 
