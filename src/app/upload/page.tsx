@@ -18,9 +18,9 @@ const Upload = () => {
               className='w-full bg-transparent py-1 px-1 ram focus:outline-none'
               name="category"
             >
-              <option className='bg-transparent' value="abstract">Абстракционизм</option>
-              <option value="3d">3D</option>
-              <option value="2d">2D</option>
+              <option className='bg-[#1f1f1f] text-white' value="abstract">Абстракционизм</option>
+              <option className='bg-[#1f1f1f] text-white' value="3d">3D</option>
+              <option className='bg-[#1f1f1f] text-white' value="2d">2D</option>
             </select>
           </div>
           <div

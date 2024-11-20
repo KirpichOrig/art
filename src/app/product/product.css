@@ -1,6 +1,9 @@
 .ram {
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
+.raam {
+  border-bottom: 1px solid white;
+}
 .ram-img {
   border: 1px solid rgba(255, 255, 255, 0.15);
 }

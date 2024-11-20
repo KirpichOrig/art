@@ -7,7 +7,6 @@
 .my-masonry-grid {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* Убираем отступы по бокам */
     margin-left: -24px; /* Для компенсации отступов между колонками */
     margin-right: -10px; /* Для компенсации отступов между колонками */
   }
