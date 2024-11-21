@@ -1,25 +1,20 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Masonry from 'react-masonry-css';
 import Image from 'next/image';
 import Link from 'next/link';
 import './catalog.css';
 
-const images = [
-  { src: '/images/catalog/1.gif', alt: 'Image 1', width: 300, height: 400 },
-  { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-  { src: '/images/catalog/1.gif', alt: 'Image 1', width: 300, height: 400 },
-  { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-  { src: '/images/catalog/1.gif', alt: 'Image 1', width: 300, height: 400 },
-  { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-  { src: '/images/catalog/1.gif', alt: 'Image 1', width: 300, height: 400 },
-  { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-];
+// Тип данных для файлов
+interface FileData {
+  id: number;
+  name: string;
+  file_path: string;
+}
 
 const Product = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
-  const [fileName, setFileName] = useState(""); // Состояние для имени файла
+  const [files, setFiles] = useState<FileData[]>([]);
 
   const breakpointColumnsObj = {
     default: 10,
@@ -33,6 +28,17 @@ const Product = () => {
     768: 2,
     500: 1,
   };
+
+  // Получаем файлы из API при загрузке компонента
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const response = await fetch('/api/getFiles.php'); // API для получения файлов
+      const data = await response.json();
+      setFiles(data); // Обновляем состояние с полученными файлами
+    };
+
+    fetchFiles();
+  }, []);
 
   return (
     <div className="relative">
@@ -64,7 +70,7 @@ const Product = () => {
           <Link href="/start">
             <i className="fa-solid fa-house text-[#474747] text-[22px]"></i>
           </Link>
-          <Link href="/upload" onClick={(e) => { e.preventDefault(); setIsModalOpen(true); }}>
+          <Link href="/upload">
             <i className="fa-regular fa-square-plus text-[#474747] text-[26px]"></i>
           </Link>
           <Link href="/catalog">
@@ -80,14 +86,14 @@ const Product = () => {
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"
         >
-          {images.map((image, index) => (
-            <div key={index} className="rounded-[10px] overflow-hidden shadow-lg">
-              <Link href="/product">
+          {files.map((file) => (
+            <div key={file.id} className="rounded-[10px] overflow-hidden shadow-lg">
+              <Link href={`/product/${file.id}`}>
                 <Image
-                  src={image.src}
-                  alt={image.alt}
-                  width={image.width}
-                  height={image.height}
+                  src={file.file_path}
+                  alt={file.name}
+                  width={300}
+                  height={400}
                   className="rounded-[10px]"
                 />
               </Link>
@@ -95,76 +101,6 @@ const Product = () => {
           ))}
         </Masonry>
       </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-30"
-          onClick={() => setIsModalOpen(false)} // Закрытие при клике вне модала
-        >
-          <div
-            className="max-w-[1160px] flex flex-col mt-0 ml-auto mb-0 mr-auto min-h-screen"
-            onClick={(e) => e.stopPropagation()} // Предотвращаем закрытие при клике внутри модального окна
-          >
-            <div className="flex-grow max-w-[400px] w-full mx-auto text-white flex justify-center items-center">
-              <form className="bg-black border border-dashed relative px-6 py-4 rounded-[10px] max-w-[400px] w-full flex flex-col justify-center items-center gap-10">
-                <p className="text-[20px] font-[600]">Добавление файла</p>
-                <div className="flex flex-col gap-2 w-full">
-                  <input
-                    className="bg-transparent w-full raam px-2"
-                    type="text"
-                    name=""
-                    placeholder="Название"
-                  />
-                  <select
-                    className="w-full bg-transparent py-1 px-1 raam focus:outline-none"
-                    name="category"
-                  >
-                    <option className="bg-[#1f1f1f] text-white" value="abstract">
-                      Абстракционизм
-                    </option>
-                    <option className="bg-[#1f1f1f] text-white" value="3d">
-                      3D ART
-                    </option>
-                    <option className="bg-[#1f1f1f] text-white" value="2d">
-                      2D ART
-                    </option>
-                  </select>
-                </div>
-                <div
-                  className="bg-[#1f1f1f] rounded-[5px] p-6 w-full text-center cursor-pointer"
-                  onClick={() => document.getElementById('fileInput')?.click()}
-                >
-                  {fileName ? (
-                    <p className="text-white font-[300] opacity-[0.7] text-[16px]">{fileName}</p>
-                  ) : (
-                    <p className="text-white font-[300] opacity-[0.7] text-[16px]">
-                      Перетащите файл сюда или нажмите для выбора
-                    </p>
-                  )}
-                  <input
-                    id="fileInput"
-                    type="file"
-                    className="hidden"
-                    onChange={(e) =>
-                      setFileName(e.target.files ? e.target.files[0]?.name : '')
-                    }
-                  />
-                </div>
-                <button className="bg-[#ffffff] w-full rounded-[5px] py-2 text-[16px] font-[500] text-black">
-                  Готово
-                </button>
-                <Link
-                  className="absolute top-[8px] right-4 rounded-[10px]"
-                  href="/start"
-                >
-                  <i className="fa-solid fa-xmark fa-lg"></i>
-                </Link>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
