@@ -52,10 +52,15 @@ const Upload = () => {
     // Очистить ошибку, если все поля заполнены
     setError('');
 
+    // Получаем userId из localStorage
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = userData.id; // Предполагаем, что у объекта есть поле 'id'
+
     // Логика отправки данных на сервер
     const formData = new FormData();
     formData.append('name', name); // Включаем название файла
     formData.append('category', category);
+    formData.append('userId', userId.toString()); // Добавляем userId
 
     // Получаем файл из input
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
@@ -82,6 +87,7 @@ const Upload = () => {
       setError('Ошибка сервера. Пожалуйста, попробуйте позже.');
     }
   };
+
 
   return (
     <div className='max-w-[1160px] flex flex-col mt-0 ml-auto mb-0 mr-auto min-h-screen'>

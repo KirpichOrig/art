@@ -50,23 +50,65 @@ const quotes = [
     }
 ];
 
-const myimages = [
-    { src: '/images/banner/1.png', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/catalog/1.gif', alt: 'Image 1', width: 300, height: 400 },
-];
-
-const images = [
-    { src: '/images/banner/1.png', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/catalog/1.gif', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/banner/2.png', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/catalog/2.jpg', alt: 'Image 1', width: 300, height: 400 },
-    { src: '/images/catalog/1.gif', alt: 'Image 1', width: 300, height: 400 },
-];
-
 const Profile = () => {
+    const [files, setFiles] = useState<any[]>([]);  // Храним файлы
+    // Получаем файлы с сервера
+    useEffect(() => {
+        const fetchFiles = async () => {
+            const response = await fetch('http://site/src/api/files.php');
+            const data = await response.json();
+            setFiles(data);  // Обновляем состояние с файлами
+        };
+
+        fetchFiles();
+    }, []);
+
+    const [userId, setUserId] = useState<number | null>(null);
+    const [userFiles, setUserFiles] = useState<any[]>([]);
+
+    useEffect(() => {
+        // Получаем данные из localStorage
+        const storedUser = localStorage.getItem('user');
+
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            setUserId(user.id);  // Устанавливаем userId из localStorage
+            fetchUserData(user.id);  // Отправляем userId на сервер
+        } else {
+            console.error("User data is not available in localStorage");
+        }
+    }, []);
+
+    // Функция для получения данных пользователя с сервера
+    function fetchUserData(userId: number): void {
+        fetch(`http://site/src/api/user.php?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error(data.error);
+                } else {
+                    console.log("User data:", data);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching user data:", error);
+            });
+    }
+
+    useEffect(() => {
+        if (userId !== null) {
+            // Загружаем файлы пользователя, если userId установлен
+            const fetchUserFiles = async () => {
+                const response = await fetch(`http://site/src/api/userFiles.php?user_id=${userId}`);
+                const data = await response.json();
+                setUserFiles(data);  // Обновляем состояние с файлами
+            };
+
+            fetchUserFiles();
+        }
+    }, [userId]);  // Перезапускать только если userId изменяется
+
+
     const breakpointColumnsObj = {
         default: 10,
         2730: 9,
@@ -112,7 +154,7 @@ const Profile = () => {
     const handleEditCategory = async (id: number) => {
         const name = prompt('Введите новое название категории:');
         if (!name) return;
-    
+
         const result = await editCategory(id, name);
         if (result.success) {
             alert('Категория обновлена');
@@ -121,12 +163,12 @@ const Profile = () => {
             alert(result.error);
         }
     };
-    
+
 
     const handleAddCategory = async () => {
         const name = prompt('Введите название категории:');
         if (!name) return;
-    
+
         const result = await addCategory(name);
         if (result.success) {
             alert('Категория добавлена');
@@ -135,7 +177,7 @@ const Profile = () => {
             alert(result.error);
         }
     };
-    
+
     const [user, setUser] = useState<{ name: string; role: string } | null>(null); // Состояние для пользователя с ролью
     const [randomQuote, setRandomQuote] = useState<{ text: string; author: string } | null>(null); // Состояние для случайной цитаты
     const [activeTab, setActiveTab] = useState<'quotes' | 'works' | 'adminWorks' | 'courses'>('quotes'); // Состояние для активной вкладки
@@ -210,17 +252,17 @@ const Profile = () => {
                     <div>
                         <Masonry
                             breakpointCols={breakpointColumnsObj}
-                            className="my-masonry-grid px-4"
+                            className="my-masonry-grid mt-4"
                             columnClassName="my-masonry-grid_column"
                         >
-                            {myimages.map((image, index) => (
-                                <div key={index} className="rounded-[10px] overflow-hidden shadow-lg">
-                                    <Link href="/product">
-                                        <Image
-                                            src={image.src}
-                                            alt={image.alt}
-                                            width={image.width}
-                                            height={image.height}
+                            {userFiles.map((file) => (
+                                <div key={file.id} className="rounded-[10px] overflow-hidden shadow-lg">
+                                    <Link href={`/card/${file.id}`}>
+                                        <img
+                                            src={`http://site/src/api/${file.file_path}`}
+                                            alt={file.name}
+                                            width={300}
+                                            height={400}
                                             className="rounded-[10px]"
                                         />
                                     </Link>
@@ -228,7 +270,7 @@ const Profile = () => {
                             ))}
                         </Masonry>
                         <div className="flex flex-col items-center justify-center gap-4 mt-10">
-                            <p className="text-white">Тут пусто :(</p>
+                            {/* <p className="text-white">Тут пусто :(</p> */}
                             <Link
                                 href="upload"
                                 className="text-white px-4 py-2 rounded-[10px] border border-solid hover:opacity-[0.7] duration-300"
@@ -282,20 +324,21 @@ const Profile = () => {
                         </div>
                         <Masonry
                             breakpointCols={breakpointColumnsObj}
-                            className="my-masonry-grid px-4 mt-5"
+                            className="my-masonry-grid mt-4"
                             columnClassName="my-masonry-grid_column"
                         >
-                            {images.map((image, index) => (
-                                <div key={index} className="rounded-[10px] overflow-hidden shadow-lg">
-                                    <Link href="/product">
-                                        <Image
-                                            src={image.src}
-                                            alt={image.alt}
-                                            width={image.width}
-                                            height={image.height}
+                            {files.map((file) => (
+                                <div key={file.id} className="relative rounded-[10px] overflow-hidden shadow-lg">
+                                    <Link href={`/card/${file.id}`}>
+                                        <img
+                                            src={`http://site/src/api/${file.file_path}`}
+                                            alt={file.name}
+                                            width={300}
+                                            height={400}
                                             className="rounded-[10px]"
                                         />
-                                    </Link>
+                                    </Link> 
+                                    <i className="absolute top-4 right-4 bg-white px-2 py-2 rounded-[10px] fa-regular fa-trash-can"></i>
                                 </div>
                             ))}
                         </Masonry>

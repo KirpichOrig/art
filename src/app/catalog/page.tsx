@@ -6,15 +6,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import './catalog.css';
 
-// Тип данных для файлов
-interface FileData {
-  id: number;
-  name: string;
-  file_path: string;
-}
-
 const Product = () => {
-  const [files, setFiles] = useState<FileData[]>([]);
+  const [files, setFiles] = useState<any[]>([]); // Список всех файлов
+  const [searchQuery, setSearchQuery] = useState(''); // Поисковый запрос
+  const [filteredFiles, setFilteredFiles] = useState<any[]>([]); // Отфильтрованные файлы
 
   const breakpointColumnsObj = {
     default: 10,
@@ -29,16 +24,30 @@ const Product = () => {
     500: 1,
   };
 
-  // Получаем файлы из API при загрузке компонента
+  // Получаем файлы с сервера
   useEffect(() => {
     const fetchFiles = async () => {
-      const response = await fetch('/api/getFiles.php'); // API для получения файлов
+      const response = await fetch('http://site/src/api/files.php');
       const data = await response.json();
-      setFiles(data); // Обновляем состояние с полученными файлами
+      setFiles(data); // Сохраняем файлы
+      setFilteredFiles(data); // Устанавливаем первоначальный список для отображения
     };
 
     fetchFiles();
   }, []);
+
+  // Обновляем список отфильтрованных файлов при изменении поискового запроса
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredFiles(files); // Если строка поиска пуста, отображаем все файлы
+    } else {
+      setFilteredFiles(
+        files.filter((file) =>
+          file.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+  }, [searchQuery, files]);
 
   return (
     <div className="relative">
@@ -49,6 +58,8 @@ const Product = () => {
             <input
               type="text"
               placeholder="Поиск"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)} // Обновляем поисковый запрос
               className="bg-transparent w-full h-[48px] focus:outline-none text-white"
             />
             <i className="fa-solid fa-magnifying-glass fa-lg"></i>
@@ -58,7 +69,7 @@ const Product = () => {
               href="/profile"
               className="bg-[#1d1d1d] flex items-center justify-center rounded-[1000px] text-black font-[600] text-[24px] h-[44px] w-[46px]"
             >
-              D
+              A
             </Link>
           </div>
         </div>
@@ -86,11 +97,11 @@ const Product = () => {
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"
         >
-          {files.map((file) => (
+          {filteredFiles.map((file) => (
             <div key={file.id} className="rounded-[10px] overflow-hidden shadow-lg">
-              <Link href={`/product/${file.id}`}>
+              <Link href={`/card/${file.id}`}>
                 <Image
-                  src={file.file_path}
+                  src={`http://site/src/api/${file.file_path}`}
                   alt={file.name}
                   width={300}
                   height={400}

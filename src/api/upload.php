@@ -21,7 +21,8 @@ try {
 // Проверяем, был ли загружен файл
 if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
     // Указываем директорию для загрузки
-    $uploadDir = 'D:/OSPanel/domains/site/public/images/catalog/';
+    $uploadDir = 'uploads/';
+    // $uploadDir = 'D:/OSPanel/domains/site/public/images/catalog/';
 
     // Проверяем существование папки
     if (!is_dir($uploadDir)) {
@@ -48,6 +49,14 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
     $stmt->execute([$categoryId]);
     $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    $userId = $_POST['userId'];
+
+    // Проверяем, существует ли переданный userId
+    if (!$userId) {
+        echo json_encode(["error" => "Не указан ID пользователя."]);
+        exit();
+    }
+
     if (!$category) {
         echo json_encode(["error" => "Категория с таким ID не существует."]);
         exit();
@@ -57,9 +66,8 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
     if (move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
         // Файл загружен успешно, теперь добавляем информацию в базу данных
         try {
-            $userId = 1; // Получите ID пользователя из сессии или другого источника
             $stmt = $conn->prepare("INSERT INTO media_files (name, user_id, category_id, file_path, type, created_at) 
-                                    VALUES (?, ?, ?, ?, ?, NOW())");
+                        VALUES (?, ?, ?, ?, ?, NOW())");
             $stmt->execute([
                 $fileNameInput,    // Используем название из формы
                 $userId,           // user_id
